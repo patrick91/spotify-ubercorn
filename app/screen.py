@@ -27,7 +27,7 @@ def display_remote_image(url: str, brightness: float = 0.3) -> None:
 
     img = source.resize((width, height), resample=Image.BICUBIC)
 
-    img = ImageOps.flip(img)
+    img = ImageOps.mirror(img)
 
     for x in range(width):
         for y in range(height):
