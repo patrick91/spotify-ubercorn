@@ -3,7 +3,7 @@ import typing
 from multiprocessing import Pipe, Process
 
 import uvicorn
-from pyfy import ClientCreds, Spotify, UserCreds
+from pyfy import ApiError, ClientCreds, Spotify
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -20,7 +20,7 @@ def _code_server(connection):
 
     app = Starlette(routes=[Route("/", homepage)])
 
-    uvicorn.run(app, port=4444, log_level="error")
+    uvicorn.run(app, host="0.0.0.0", port=4444, log_level="error")
 
 
 def wait_for_code():
@@ -54,11 +54,15 @@ def authorize(spotify: Spotify) -> None:
 
 
 def get_last_song(spotify: Spotify) -> typing.Optional[typing.Dict]:
-    current_song = spotify.currently_playing()
+    try:
+        current_song = spotify.currently_playing()
 
-    if current_song:
-        return current_song
-    else:
-        last_tracks = spotify.recently_played_tracks(limit=1)['items']
+        if current_song:
+            return current_song["item"]
+        else:
+            last_tracks = spotify.recently_played_tracks(limit=1)["items"]
 
-        return last_tracks[0]['track'] if last_tracks else None
+            return last_tracks[0]["track"] if last_tracks else None
+
+    except ApiError:
+        return None

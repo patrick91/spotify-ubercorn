@@ -1,3 +1,5 @@
+import time
+
 import typer
 from dotenv import load_dotenv
 
@@ -14,15 +16,14 @@ def main() -> None:
     spotify = get_spotify_client(hostname=ip)
     authorize(spotify)
 
-    last_song = get_last_song(spotify)
+    while True:
+        last_song = get_last_song(spotify)
 
-    if not last_song:
-        typer.echo("Go play some music! 🎼🎼")
+        if last_song:
+            smallest_album_image = last_song["album"]["images"][-1]
+            display_remote_image(smallest_album_image['url'])
 
-        return
-
-    smallest_album_image = last_song["album"]["images"][-1]
-    display_remote_image(smallest_album_image['url'])
+        time.sleep(1)
 
 
 if __name__ == "__main__":
