@@ -5,14 +5,14 @@ import requests
 from PIL import Image, ImageEnhance
 
 
-def display_remote_image(url: str) -> None:
+def display_remote_image(url: str, brightness: float = 0.3) -> None:
     import unicornhathd
 
     response = requests.get(url)
     source = Image.open(BytesIO(response.content))
 
     unicornhathd.rotation(0)
-    unicornhathd.brightness(0.3)
+    unicornhathd.brightness(brightenss)
 
     width, height = unicornhathd.get_shape()
 
