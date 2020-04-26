@@ -12,7 +12,7 @@ def display_remote_image(url: str, brightness: float = 0.3) -> None:
     source = Image.open(BytesIO(response.content))
 
     unicornhathd.rotation(0)
-    unicornhathd.brightness(brightenss)
+    unicornhathd.brightness(brightness)
 
     width, height = unicornhathd.get_shape()
 
