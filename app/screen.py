@@ -1,8 +1,7 @@
 from io import BytesIO
 
 import requests
-
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageOps
 
 
 def display_remote_image(url: str, brightness: float = 0.3) -> None:
@@ -27,6 +26,8 @@ def display_remote_image(url: str, brightness: float = 0.3) -> None:
     img = img.convert("P", palette=Image.ADAPTIVE, colors=10)
 
     img = source.resize((width, height), resample=Image.BICUBIC)
+
+    img = ImageOps.flip(img)
 
     for x in range(width):
         for y in range(height):
