@@ -1,11 +1,11 @@
-import time
-
 import typer
+import uvicorn
 from dotenv import load_dotenv
+from starlette.applications import Starlette
+from strawberry.asgi import GraphQL
 
 from app.network import get_local_ip
-from app.screen import display_remote_image
-from app.spotify import authorize, get_last_song, get_spotify_client
+from app.schema import schema
 
 load_dotenv()
 
@@ -13,17 +13,16 @@ load_dotenv()
 def main() -> None:
     ip = get_local_ip()
 
-    spotify = get_spotify_client(hostname=ip)
-    authorize(spotify)
+    app = Starlette()
 
-    while True:
-        last_song = get_last_song(spotify)
+    graphql_app = GraphQL(schema)
 
-        if last_song:
-            smallest_album_image = last_song["album"]["images"][-1]
-            display_remote_image(smallest_album_image['url'])
+    app.add_route("/graphql", graphql_app)
+    app.add_websocket_route("/graphql", graphql_app)
 
-        time.sleep(1)
+    typer.echo(f"App running on http://{ip}:8000/graphql")
+
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="error")
 
 
 if __name__ == "__main__":

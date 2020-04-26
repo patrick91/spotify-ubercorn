@@ -15,6 +15,7 @@ uvicorn = "^0.11.3"
 unicornhathd = {version = "^0.0.4", optional = true}
 pillow = "^7.1.1"
 numpy = {version = "^1.18.3", optional = true}
+strawberry-graphql = "^0.23.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7.9"
